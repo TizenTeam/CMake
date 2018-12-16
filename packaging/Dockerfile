@@ -19,15 +19,6 @@ FROM ubuntu:16.04
 MAINTAINER Philippe Coval (philippe.coval@osg.samsung.com)
 ENV project cmake
 
-ARG SCONSFLAGS
-ENV SCONSFLAGS ${SCONSFLAGS:-"VERBOSE=1 ERROR_ON_WARN=False"}
-
-ARG prefix
-ENV prefix ${prefix:-/usr/}
-ARG destdir
-ENV destdir ${destdir:-/usr/local/opt/${project}}
-
-ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL en_US.UTF-8
 ENV LANG ${LC_ALL}
 
@@ -44,7 +35,6 @@ RUN echo "#log: ${project}: Preparing system" \
   && apt-get install -y \
   software-properties-common \
   lsb-release \
-  scons \
   wget \
   unzip \
   \
@@ -63,7 +53,6 @@ RUN echo "#log: ${project}: Install Tizen tools" \
 ADD . /usr/local/src/${project}
 WORKDIR /usr/local/src/${project}
 RUN echo "#log: ${project}: Preparing sources" \
-  && [ ! -x prep.sh ] || EXEC_MODE=true ./prep.sh \
   && git config --global user.name "Nobody" \
   && git config --global user.email "nobody@localhost" \
   && git init \
